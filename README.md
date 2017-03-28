@@ -8,7 +8,10 @@ go get github.com/subing/cycletimer
 
 ## example
 ```go
-c := NewTicker()
+import (
+    timer "github.com/subing/cycletimer"
+)
+c := timer.NewTicker()
 _, ok := <-c
 if !ok {
 	fmt.Println("close c")
