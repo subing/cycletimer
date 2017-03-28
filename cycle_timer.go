@@ -48,7 +48,6 @@ func NewTicker() chan string {
 	if _cycleSlice[putIndex] == nil {
 		_cycleSlice[putIndex] = set.NewSet()
 	}
-	fmt.Println("putindex := ", putIndex)
 	_cycleSlice[putIndex].Add(c)
 	return c
 }
@@ -63,7 +62,6 @@ func checkTimeout(index int) {
 		_cycleSlice[index] = set.NewSet()
 	}
 	if _cycleSlice[index].Cardinality() > 0 {
-		fmt.Println(_cycleSlice[index].ToSlice(), " current := ", index)
 		for c := range _cycleSlice[index].Iter() {
 			tmp := c.(chan string)
 			tmp <- "time_out"
