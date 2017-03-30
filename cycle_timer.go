@@ -59,15 +59,15 @@ func Stop() {
 
 func checkTimeout(index int) {
 	if _cycleSlice[index] == nil {
-		_cycleSlice[index] = set.NewSet()
+		_cycleSlice[index] = set.NewThreadUnsafeSet()
 	}
 	if _cycleSlice[index].Cardinality() > 0 {
 		for c := range _cycleSlice[index].Iter() {
 			tmp := c.(chan string)
 			tmp <- "time_out"
 			close(tmp)
+			_cycleSlice[index].Remove(tmp)
 		}
-		_cycleSlice[index].Clear()
 	}
 }
 func setInit(interval int) {
