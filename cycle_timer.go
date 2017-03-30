@@ -28,11 +28,12 @@ func Start(interval int) {
 			timer.Stop()
 			break
 		}
-		go checkTimeout(_current)
-		_current++
 		if _current == _interval+1 {
 			_current = 0
 		}
+		go checkTimeout(_current)
+		_current++
+
 	}
 }
 
@@ -45,8 +46,9 @@ func NewTicker() chan string {
 	} else {
 		putIndex = _current - 1
 	}
+	fmt.Println("putIndex := ", putIndex)
 	if _cycleSlice[putIndex] == nil {
-		_cycleSlice[putIndex] = set.NewThreadUnsafeSet()
+		_cycleSlice[putIndex] = set.NewSet()
 	}
 	_cycleSlice[putIndex].Add(c)
 	return c
@@ -59,15 +61,17 @@ func Stop() {
 
 func checkTimeout(index int) {
 	if _cycleSlice[index] == nil {
-		_cycleSlice[index] = set.NewThreadUnsafeSet()
+		_cycleSlice[index] = set.NewSet()
 	}
-	if _cycleSlice[index].Cardinality() > 0 {
+	size := _cycleSlice[index].Cardinality()
+	fmt.Println("size := ", size)
+	if size > 0 {
 		for c := range _cycleSlice[index].Iter() {
 			tmp := c.(chan string)
 			tmp <- "time_out"
 			close(tmp)
-			_cycleSlice[index].Remove(tmp)
 		}
+		_cycleSlice[index].Clear()
 	}
 }
 func setInit(interval int) {
