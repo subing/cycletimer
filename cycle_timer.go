@@ -46,7 +46,7 @@ func NewTicker() chan string {
 		putIndex = _current - 1
 	}
 	if _cycleSlice[putIndex] == nil {
-		_cycleSlice[putIndex] = set.NewSet()
+		_cycleSlice[putIndex] = set.NewThreadUnsafeSet()
 	}
 	_cycleSlice[putIndex].Add(c)
 	return c

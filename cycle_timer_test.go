@@ -8,8 +8,8 @@ import (
 
 func Test_Timer(t *testing.T) {
 	go Start(10)
-	for i := 0; i < 2; i++ {
-		time.Sleep(time.Duration(3) * time.Second)
+	for i := 0; i < 10; i++ {
+		//time.Sleep(time.Duration(3) * time.Second)
 		go tickerTest()
 	}
 	time.Sleep(time.Duration(120) * time.Second)
