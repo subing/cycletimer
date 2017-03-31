@@ -73,7 +73,6 @@ func checkTimeout(index int) {
 		_cycleSlice[index] = set.NewSet()
 	}
 	size := _cycleSlice[index].Cardinality()
-	fmt.Println("size := ", size)
 	if size > 0 {
 		for c := range _cycleSlice[index].Iter() {
 			tmp := c.(chan string)
