@@ -2,6 +2,7 @@ package cycletimer
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -9,19 +10,23 @@ import (
 func Test_Timer(t *testing.T) {
 	go Start(10)
 	time.Sleep(time.Duration(1) * time.Second)
+	var tcList []CycleTicker
 	for i := 0; i < 10; i++ {
-
-		go tickerTest()
+		tc := NewTicker()
+		tcList = append(tcList, tc)
+		go tickerTest(tc, i)
+		if i == 4 {
+			Close(tcList[1])
+			Close(tcList[2])
+		}
 	}
 	time.Sleep(time.Duration(120) * time.Second)
 }
 
-func tickerTest() {
-	c := NewTicker()
-	res, ok := <-c
+func tickerTest(tc CycleTicker, index int) {
+	res, ok := <-tc.C
 	if !ok {
-		fmt.Println("close c")
 		return
 	}
-	fmt.Println("c ", res)
+	fmt.Println("c ", res, " "+strconv.Itoa(index))
 }

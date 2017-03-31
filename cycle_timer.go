@@ -37,8 +37,13 @@ func Start(interval int) {
 	}
 }
 
+type CycleTicker struct {
+	Index int
+	C     chan string
+}
+
 //NewTicker 创建定时器
-func NewTicker() chan string {
+func NewTicker() CycleTicker {
 	c := make(chan string)
 	putIndex := 0
 	if _current == 0 {
@@ -51,12 +56,16 @@ func NewTicker() chan string {
 		_cycleSlice[putIndex] = set.NewSet()
 	}
 	_cycleSlice[putIndex].Add(c)
-	return c
+	return CycleTicker{putIndex, c}
 }
 
 //Stop 结束定时器
 func Stop() {
 	timer.Stop()
+}
+
+func Close(tc CycleTicker) {
+	_cycleSlice[tc.Index].Remove(tc.C)
 }
 
 func checkTimeout(index int) {
